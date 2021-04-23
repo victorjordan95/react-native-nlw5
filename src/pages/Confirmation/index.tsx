@@ -5,34 +5,58 @@ import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 import { Feather } from '@expo/vector-icons'
 import { Button } from '../../components/Button';
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation, useRoute } from '@react-navigation/core';
+
+interface Params {
+  title: string;
+  subtitle: string;
+  buttonTitle: string;
+  icon: 'smile' | 'hug',
+  nextScreen: string;
+}
+
+const emojis = {
+  hug: '🤗',
+  smile: '😄'
+}
 
 export function Confirmation() {
   const navigation = useNavigation();
+  const route = useRoute();
 
-
+  const {
+    title,
+    subtitle,
+    buttonTitle,
+    icon,
+    nextScreen
+  } = route.params as Params;
+  
   function handleMoveOn() {
-    navigation.navigate('PlantSelect');
+    navigation.navigate(nextScreen);
   }
 
-  return (
+  return(
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.emoji}>
-          😄
+          {emojis[icon]}
         </Text>
+
         <Text style={styles.title}>
-          Prontinho
+          {title}
         </Text>
+
         <Text style={styles.subtitle}>
-          Agora vamos começar a cuidar das suas plantinhas com muito cuidado
+          {subtitle}
         </Text>
+
         <View style={styles.footer}>
-          <Button title="Começar" onPress={handleMoveOn} />
+          <Button title={buttonTitle} onPress={handleMoveOn} />
         </View>
       </View>
     </SafeAreaView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -45,14 +69,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    width: '100%'
-  },
-  emoji: {
-    fontSize: 78,
+    width: '100%',
+    padding: 30
   },
   title: {
     fontSize: 22,
     fontFamily: fonts.heading,
+    textAlign: 'center',
     color: colors.heading,
     lineHeight: 38,
     marginTop: 15,
@@ -63,6 +86,9 @@ const styles = StyleSheet.create({
     fontSize: 17,
     paddingVertical: 10,
     color: colors.heading,
+  },
+  emoji: {
+    fontSize: 78
   },
   footer: {
     width: '100%',
